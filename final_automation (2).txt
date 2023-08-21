@@ -1,0 +1,741 @@
+---
+- name: The 4.1.1
+  hosts: "{{ host }}"
+  gather_facts: yes
+  vars_prompt:
+    - name: "vars_file"
+      prompt: "Which vars file do you want to use? (dev/test/prod)"
+      private: no
+    - name: "host"
+      prompt: "Enter the hostname of the server to configure (apr12dev01/apr12tst01)"
+      private: no
+  vars_files:
+    - "{{ vars_file }}.yml"
+    - pass.yml
+  vars:
+    ansible_connection_timeout: 86400
+  tasks:
+    - name: mv tst to dev
+      shell: mv {{ source_file_name }} {{ cloned_file_name }}
+      args:
+        chdir: "{{ APPL_TOP }}"
+      ignore_errors: true
+      register: result
+    - debug:
+        var: result
+
+    - name: Changing the file name
+      lineinfile:
+        path: "{{ CUSTOM_ENV_FILE }}"
+        regexp: ^ARC_CUST_TOP=.*
+        line: "ARC_CUST_TOP={{ ARC_CUST_TOP }}"
+        backrefs: yes
+      register: riki
+    - debug:
+        var: riki
+
+    - name: Edit the Custom*.env files in the $INST_TOP/appl/admin directory
+      lineinfile:
+        path: "{{ CUSTOM_ENV_FILE }}"
+        regexp: ^ARC_INTF_TOP=.*
+        line: "ARC_INTF_TOP={{ ARC_CUST}}"
+        backrefs: yes
+      register: l
+      tags:
+        - py
+    - debug:
+        var: l
+
+    - name: Changing the SID location
+      lineinfile:
+        path: "{{ ARC_CUST_TOP }}/cfsm/cfsmon.env"
+        regexp: ^ORACLE_SID=.*
+        line: "ORACLE_SID={{ SID }}"
+        backrefs: yes
+      register: pl
+    - debug:
+        var: pl
+    - name: Setting the passwd
+      lineinfile:
+        path: "{{ FND_SECURE }}/{{ dbc }}"
+        regexp: "^GUEST_USER_PWD=.*"
+        line: "GUEST_USER_PWD=GUEST/GUEST"
+        backrefs: yes
+      register: sir
+    - debug:
+        var: sir
+
+    - name: Take a backup of fnd_secure
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         alter session set container={{ container }};
+         create table apps.fnd_user_bkp_{{ lookup('pipe', 'date +%d%m%Y') }} as select * from fnd_user;
+         create table apps.fnd_oracle_userid_bkp_{{ lookup('pipe', 'date +%d%m%Y') }} as select * from fnd_oracle_userid;
+         select table_name from user_tables where table_name like 'FND%';
+         select count(*) from apps.fnd_user;
+          exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: name
+    - debug:
+        var: name.stdout_lines
+
+    - name: Stop all services
+      expect:
+        command: ./adstpall.sh apps/{{ apps_password }}
+        chdir: "{{ INST_TOP }}/admin/scripts/"
+        responses:
+          "Enter the WebLogic Server password:": "{{ wls_password }}"
+        timeout: 1500
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+      register: r1
+
+    - debug:
+        var: r1.stdout_lines
+
+    - name: Change APPSLSYS password in the database
+      shell: |
+        {{ FND_TOP }}/bin/FNDCPASS apps/{{ current_password }} 0 Y system/{{ system_password }} SYSTEM APPLSYS {{ apps_password }}
+      delegate_to: localhost
+      changed_when: true
+      register: rd
+      tags:
+       - s
+    - debug:
+        var: rd
+      tags:
+       - s
+
+    - name: Change ORACLE password in the database
+      shell: |
+        {{ FND_TOP }}/bin/FNDCPASS apps/{{ apps_password }} 0 Y system/{{ system_password }} ORACLE appsarch {{ apps_password_new }}
+      delegate_to: localhost
+      changed_when: true
+      register: rd1
+      tags:
+       - s
+    - debug:
+        var: rd1
+      tags:
+       - s
+
+
+    - name: Change ALLORACLE password in the database
+      shell: |
+        {{ FND_TOP }}/bin/FNDCPASS apps/{{ apps_password }} 0 Y system/{{ system_password }} ALLORACLE {{ apps_password_new }}
+      delegate_to: localhost
+      changed_when: true
+      register: rd2
+      tags:
+       - s
+    - debug:
+        var: rd2
+      tags:
+       - s
+
+    - name: adautocfg
+      expect:
+        command: sh adautocfg.sh
+        chdir: "{{ INST_TOP }}/admin/scripts/"
+        responses:
+          "Enter the APPS user password:": "{{ apps_password }}"
+        timeout: 3600
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+      register: r3
+      tags:
+        - sr
+
+    - debug:
+        var: r3.stdout_lines
+      tags:
+        - sr
+
+    - name: adadminsrvctl
+      expect:
+        command: sh adadminsrvctl.sh start
+        chdir: "{{ INST_TOP }}/admin/scripts/"
+        responses:
+          "Enter the WebLogic Admin password:": "{{ wls_password }}"
+          "Enter the APPS Schema password:": "{{ apps_password }}"
+        timeout: 3600
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+      register: r4
+      tags:
+       - addd
+
+    - debug:
+        var: r4.stdout_lines
+      tags:
+       - addd
+
+
+    - name: Update WebLogic Datasource Password
+      expect:
+        command: perl {{ FND_TOP }}/patch/115/bin/txkManageDBConnectionPool.pl
+        responses:
+          'Enter Your Choice : ': 'updateDSPassword'
+          'Enter the full path of Applications Context File ': "{{ perl_file }}"
+          'Enter weblogic admin server password: ': '{{ wls_password }}'
+          'Enter the APPS user password: ': '{{ apps_password }}'
+        timeout: 1700
+      vars:
+        path_to_app_context_file: '/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/R12DEV01_orcas1cfsdevap1.xml'
+        ansible_python_interpreter: /usr/bin/python3
+      delegate_to: localhost
+      register: r5
+      tags:
+       - sd
+    - debug:
+        var: r5.stdout_lines
+      tags:
+       - sd
+
+    - name: Stop all services
+      expect:
+        command: ./adstpall.sh apps/{{ apps_password }}
+        chdir: "{{ INST_TOP }}/admin/scripts/"
+        responses:
+          "Enter the WebLogic Server password:": "{{ wls_password }}"
+        timeout: 1500
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+      register: r6
+
+    - debug:
+        var: r6.stdout_lines
+
+    - name: status
+      stat:
+        path: /{{ tar_location }}/1.0
+      register: r2
+      delegate_to: "{{ host2 }}"
+      tags:
+        - status
+    - debug:
+        var: r2
+      tags:
+        - status
+
+    - name: Run tar command in the background
+      command: nohup tar -cvzf 1.15.tar.gz 1.0
+      args:
+        chdir: /{{ tar_location }}
+      async: 86400
+      poll: 0
+      ignore_errors: yes
+      delegate_to: "{{ host2 }}"
+      tags:
+        - status4
+
+    - name: Wait for tar command to complete
+      pause:
+        minutes: 120
+
+    - name: Get remote file info
+      stat:
+        path: /{{ tar_location }}/1.15.tar.gz
+      register: remote_file_info
+      delegate_to: "{{ host2 }}"
+
+    - debug:
+        var: remote_file_info
+
+    - name: Copy file from remote to local using rsync
+      synchronize:
+        src: "{{ host2 }}@{{ hostname2 }}:/{{ tar_location }}/1.15.tar.gz"
+        dest: /{{ untar_location }}
+        mode: pull
+        rsync_opts:
+          - "--human-readable"
+          - "--partial"
+          - "--timeout=36000"
+          - "--out-format='Time taken: %E\r'"
+      delegate_to: "{{ host }}"
+      poll: 0
+      retries: 3
+      delay: 60
+      register: result
+      tags:
+       - prt
+    - debug:
+        var: result
+      tags:
+       - prt
+
+
+
+    - name: Wait for tar command to complete
+      pause:
+        minutes: 1
+
+    - name: backup
+      command: mv 1.0 1.0_old
+      args:
+        chdir: /{{ untar_location }}
+      ignore_errors: true
+      register: ra
+    - debug:
+        var: ra
+
+
+    - name: stats
+      stat:
+        path: /{{ untar_location }}/1.5.tar.gz
+      register: r1
+      tags:
+        - status2
+    - debug:
+        var: r1
+      tags:
+        - status2
+
+
+    - name: Run untar command in the background
+      command: nohup tar -xvzf 1.5.tar.gz
+      args:
+       chdir: /{{ untar_location }}
+      async: 86400
+      poll: 120
+      ignore_errors: yes
+      tags:
+       - pp
+
+    - name: Wait for tar command to complete
+      pause:
+        minutes: 1
+
+    - name: Recreate symbolic links
+      shell: |
+        cd {{ ARC_CUST_TOP }}/bin
+        for i in $(ls -tlr | grep ^l | grep fndcpesr | awk '{print $9}')
+        do
+          ls -tlr $i
+          rm $i
+          ln -s {{ FND_TOP }}/bin/fndcpesr $i
+          ls -tlr $i
+        done
+      register: shell_output
+
+    - name: Debug output
+      debug:
+        var: shell_output
+
+    - name: Recreate symbolic link
+      shell: rm CUSTOM.plx CUSTOM.pll
+      args:
+        chdir: /{{ AU_TOP }}/resource/
+      register: kr1
+      ignore_errors: true
+      tags:
+        - ppp
+    - debug:
+        var: kr
+      tags:
+        - ppp
+
+    - name: Recreate symbolic link
+      shell: ln -s {{ARC_CUST_TOP}}/lib/CUSTOM.plx CUSTOM.plx
+      args:
+        chdir: /{{ AU_TOP }}/resource/
+      register: kar
+      tags:
+        - pp
+    - debug:
+        var: kar
+      tags:
+        - pp
+
+    - name: Recreate symbolic link
+      shell: ln -s {{ARC_CUST_TOP}}/lib/CUSTOM.pll CUSTOM.pll
+      args:
+        chdir: /{{ AU_TOP }}/resource/
+      register: kr
+      tags:
+       - p
+    - debug:
+        var: kr
+      tags:
+       - p
+
+    - name: unlink ARXSGPO.rdf
+      shell: unlink ARXSGPO.rdf
+      args:
+        chdir: /{{ AR_TOP }}/reports/US/
+      register: r9
+      tags:
+       - a
+    - debug:
+        var: r9
+      tags:
+       - a
+
+    - name: Sanity check
+      expect:
+        command: sh adstrtal.sh apps/{{ apps_password }}
+        chdir: "{{ INST_TOP }}/admin/scripts/"
+        responses:
+          "Enter the WebLogic Server password:": "{{ wls_password }}"
+        timeout: 3600
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+      register: r10
+      tags:
+       - ad
+
+    - debug:
+        var: r10.stdout_lines
+      tags:
+       - ad
+
+
+    - name: show parameter ult
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         alter session set container={{ container }};
+         show parameter utl;
+          exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: nm
+    - debug:
+        var: nm.stdout_lines
+
+    - name: Update OFAC Program
+      lineinfile:
+        path: /{{ARC_CUST_TOP}}/bin/arc_ofac_sql.prog
+        regexp: "^\\$ARC*"
+        line: "#$ARC_CUST_TOP/bin/arc_ofac_ftp"
+        backrefs: yes
+        state: present
+      register: k
+      tags:
+        - gg
+    - debug:
+        var: k
+
+    - name: else line
+      lineinfile:
+        path: /{{ARC_CUST_TOP}}/bin/arc_ofac_sql.prog
+        regexp: "^else  #3"
+        line: "#else  #3"
+        state: present
+      register: a
+    - debug:
+        var: a
+
+    - name: echo line
+      lineinfile:
+        path: /{{ARC_CUST_TOP}}/bin/arc_ofac_sql.prog
+        regexp: "^echo 'INFORMATION :   No vendors eligible for selection in this run'"
+        line: "#echo 'INFORMATION :   No vendors eligible for selection in this run'"
+        state: present
+      register: b
+    - debug:
+        var: b
+
+    - name: emp file
+      lineinfile:
+        path: /{{ARC_CUST_TOP}}/bin/arc_ofac_sql.prog
+        regexp: "^mv.*"
+        line: '#mv  $fname  $emp_file'
+        backrefs: yes
+      register: e
+      tags:
+        - pp
+    - debug:
+        var: e
+
+    - name: GL Interface
+      lineinfile:
+        path: /{{ARC_CUST_TOP}}/bin/arc_gl_intf_main.prog
+        regexp: "^ENV_FILE=.*"
+        line: "ENV_FILE={{ Gl }}"
+        backrefs: yes
+      register: ha
+    - debug:
+        var: ha
+
+    - name: Cathedral commenting
+      lineinfile:
+        path: /{{ARC_CUST_TOP}}/bin/cathedral.sh
+        regexp: "^cd /inbound/invoice*"
+        line: "#cd /inbound/invoice"
+        backrefs: yes
+        state: present
+      register: p
+    - debug:
+        var: p
+
+    - name: Cathedral uncommenting
+      lineinfile:
+        path: /{{ARC_CUST_TOP}}/bin/cathedral.sh
+        state: present
+        regexp: "#^cd /inbound/test*"
+        line: "cd /inbound/test"
+        backrefs: yes
+      register: q
+    - debug:
+        var: q
+
+    - name: Remove line from file
+      replace:
+        path: /{{ Ptray }}
+        regexp: ^## eval 'cat \${ARC_INTF_TOP}\${P_ACTIVE_DIRECTORY}/\${P_CFS_REQUEST} \| lp -c -d \$P_CFS_PRINTER -o \${P_TRAY_NAME}'$
+        replace: "##--Commented to Stop any Accidental Check Printing--\n## eval 'cat ${ARC_INTF_TOP}${P_ACTIVE_DIRECTORY}/${P_CFS_REQUEST} | lp -c -d $P_CFS_PRINTER -o ${P_TRAY_NAME}'"
+      register: remove
+    - debug:
+        var: remove
+
+    - name: mailx
+      lineinfile:
+        path: /{{ARC_CUST_TOP}}/bin/rrlarc1
+        regexp: '^mailx.*'
+        line: '#mailx -s "Standard Lockbox Rpt RRLARC3" CFSStandardLockboxRpt@redcross.org < $UTL_DIR/arc_lbiu_phss.txt'
+        backrefs: yes
+      register: e
+      tags:
+        - pp
+    - debug:
+        var: e
+
+    - name: Enable/Disable Users
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         alter session set container={{ container }};
+         create table fnd_user_BKP as select * from fnd_user;
+         update fnd_user set end_date = '10-JAN-74' where end_date  is null and   user_id > 1000;
+         commit;
+          exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: name
+    - debug:
+        var: name.stdout_lines
+
+
+    - name: Disable Supplier Email Address
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         alter session set container={{ container }};
+         update ap.ap_supplier_sites_all SET remittance_email = NULL, email_address = NULL;
+         update ap.ap_supplier_contacts set EMAIL_ADDRESS=NULL;
+         update apps.hz_parties set email_address = NULL;
+         update iby_external_payees_all set remit_advice_email = null;
+         commit;
+          exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: name
+    - debug:
+        var: name.stdout_lines
+
+
+    - name: Reset email values to null for customers
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         alter session set container={{ container }};
+         update hz_cust_acct_sites_all SET attribute10 = NULL;
+         update hz_cust_accounts_all SET attribute10=NULL;
+         update hz_contact_points SET  email_address = NULL WHERE email_address is not null AND  contact_point_purpose = 'OUTREACH';
+         commit;
+          exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: ne3
+    - debug:
+        var: ne3.stdout_lines
+
+    - name: Set directory permission to 775
+      command: chmod 775 {{ item }}
+      with_items:
+        - "{{ ARC_INTF_TOP }}/dat/inbound"
+        - "{{ ARC_INTF_TOP }}/dat/outbound"
+      register: r9
+
+    - debug:
+        var: r9
+
+    - name: Set permissions on files and directories
+      shell: |
+        cd {{ ARC_INTF_TOP }}/dat/inbound
+        find . -exec chmod g+s,o-w {} \;
+      async: 1500
+      poll: 60
+      ignore_errors: yes
+      register: r10
+
+    - debug:
+        var: r10
+
+    - name: Set permissions on files and directories
+      shell: |
+        cd {{ ARC_INTF_TOP }}/dat/outbound
+        find . -exec chmod g+s,o-w {} \;
+      async: 1500
+      poll: 60
+      ignore_errors: yes
+      register: r11
+
+    - debug:
+        var: r11
+
+    - name: Set permissions on files and directories
+      shell: |
+        cd {{ ARC_INTF_TOP }}/dat/inbound/ep_shipment_archive
+        find . -type f -exec /usr/bin/rm {} \;
+      async: 600
+      poll: 20
+      ignore_errors: yes
+      register: r12
+
+    - debug:
+        var: r12
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------
+
+hosts
+[apr12dev01@orcas1cfsdevap1 automation]$ cat hosts
+oracle  ansible_host=orcas1cfsdevdb02.redcross.net ansible_user=oracle
+apr12dev01 ansible_host=orcas1cfsdevap1.redcross.net ansible_user=apr12dev01
+apr12tst01 ansible_host=orcas1cfststap2.redcross.net ansible_user=apr12tst01
+
+[testing_host]
+#apr12tst01 ansible_host=orcas1cfststap2.redcross.net ansible_user=apr12tst01
+[apr12dev01@orcas1cfsdevap1 automation]$
+
+
+-------------------------------------------------------------------------------------------------------------------
+pass.txt
+
+[apr12dev01@orcas1cfsdevap1 automation]$ cat pass.txt
+sandy55
+
+
+-------------------------------------------------------------------------------------------------------
+pass.yml
+
+[apr12dev01@orcas1cfsdevap1 automation]$ ansible-vault view pass.yml
+apps_password: REDCROSS1
+wls_password: weblogic123
+current_password: REDCROSS1
+system_password: manager
+apps_password_new: REDCROSS1
+
+
+-------------------------------------------------------------------------------------------------------
+dev.yml
+
+---
+APPL_TOP: /cfsdev/r12dev01/fs1/EBSapps/appl/
+INST_TOP: /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1
+ARC_CUST_TOP: /cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0
+FND_SECURE: /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/fnd/12.0.0/secure
+CUSTOM_ENV_FILE: "{{ INST_TOP }}/appl/admin/customR12DEV01_orcas1cfsdevap1.env"
+#source_file_name: "cust_R12TST01_1"
+#cloned_file_name: "cust_R12DEV01_1"
+source_file_name: "cust_R12TST01"
+cloned_file_name: "cust_R12DEV01"
+ARC_CUST: /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0
+SID: "R12DEV01"
+dbc: "R12DEV01.dbc"
+oracle_sid: "R12DEVCD"
+oracle_home: /u01/app/oracle/product/19.0.0.0/dbhome_1
+sqlplus_executable: "{{oracle_home}}/bin/sqlplus"
+container: "R12DEV01"
+FND_TOP: /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0
+perl_file: "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/R12DEV01_orcas1cfsdevap1.xml"
+AU_TOP: /cfsdev/r12dev01/fs1/EBSapps/appl/au/12.0.0
+AR_TOP: /cfsdev/r12dev01/fs1/EBSapps/appl/ar/12.0.0
+Gl: "APPSR12DEV01_orcas1cfsdevap01.env"
+Ptray: /cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arccheckprint.prog
+ARC_INTF_TOP: /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0/
+host2: "apr12tst01"
+hostname2: "orcas1cfststap2.redcross.net"
+tar_location: /cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/
+untar_location: /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/sandy/sandy1/sandy2/
+
+
+
+---------------------------------------------------------------------------------------------------------------
+
+test.yml
+
+---
+APPL_TOP: /cfstst/r12tst01/tst1229/fs1/EBSapps/appl
+INST_TOP: /cfstst/r12tst01/tst1229/fs1/inst/apps/R12TST01_orcas1cfststap2
+ARC_CUST_TOP: /cfstst/r12tst01/tst1229/fs1/EBSapps/appl/cust_R12TST01/1.0
+FND_SECURE: /cfstst/r12tst01/tst1229/fs1/inst/apps/R12TST01_orcas1cfststap2/appl/fnd/12.0.0/secure
+CUSTOM_ENV_FILE: "{{ INST_TOP }}/appl/admin/customR12TST01_orcas1cfststap2.env"
+source_file_name: "cust_R12TST01"
+cloned_file_name: "cust_R12TST01"
+ARC_CUST: /cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0
+SID: "R12TST01"
+dbc: "R12TST01.dbc"
+oracle_sid: "R12TSTCD"
+oracle_home: /u01/app/oracle/product/19.0.0.0/dbhome_1
+sqlplus_executable: "{{oracle_home}}/bin/sqlplus"
+container: "R12TST01"
+FND_TOP: /cfstst/r12tst01/tst1229/fs1/EBSapps/appl/fnd/12.0.0
+perl_file: "/cfstst/r12tst01/tst1229/fs1/inst/apps/R12TST01_orcas1cfststap2/appl/admin/R12TST01_orcas1cfststap2.xml"
+AU_TOP: /cfstst/r12tst01/tst1229/fs1/EBSapps/appl/au/12.0.0
+AR_TOP: /cfstst/r12tst01/tst1229/fs1/EBSapps/appl/ar/12.0.0
+Gl: "APPSR12TST01_orcas1cfststap1.env"  # APPSR12TST01_orcas1cfststap1.env
+Ptray: /cfstst/r12tst01/tst1229/fs1/EBSapps/appl/cust_R12TST01/1.0/bin/arccheckprint.prog
+ARC_INTF_TOP: /cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0
+host2: "apr12tst01"                                                                                #pending
+hostname2: "orcas1cfststap2.redcross.net"                                                          #pending
+tar_location: /cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/                             #pending
+untar_location: /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/sandy/sandy1/sandy2/               #pending
+

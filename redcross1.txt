@@ -1,0 +1,321 @@
+
+ARC_CUST_TOP - /cfsuat/r12uat01/uat/fs1/EBSapps/appl/cust_R12UAT01/1.0
+ARC_INTF_TOP  - /cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0
+
+ARC_CUST_TOP_FS1="/cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0"
+export ARC_CUST_TOP_FS1
+
+ARC_CUST_TOP_FS2="/cfsdev/r12dev01/fs2/EBSapps/appl/cust_R12DEV01/1.0"
+
+shemp.redcross.org
+shemp.redcross.org
+sqlplus / as sysdba
+
+sql> alter session set container=R12DEV01;
+
+sql> show parameter utl
+
+
+
+kartikey.tripathi@redcross.org%cbacfsdev2%orcas1cfsdevap1.redcross.net@pampsmpcpc.redcross.org
+
+kartikey.tripathi@redcross.org%cbacfstst1%orcas1cfststap2.redcross.net@pampsmpcpc.redcross.org
+
+kartikey.tripathi@redcross.org%cbacfstst1%orcas1cfststdb02.redcross.net@pampsmpcpc.redcross.org
+
+
+
+
+
+kartikey.tripathi@redcross.org%cbacfstst1%orcas1cfststap2.redcross.net@RCCPAMPRD03
+
+ansible-playbook -i hosts st.yml | tee /home/node1/h/playbook-output-$(date +%Y-%m-%d).log
+
+
+kartikey.tripathi@redcross.org%cbacfsdev4%orcas1cfsdevap1.redcross.net@RCCPAMPRD03
+
+YOURNAME%ACCTNAME%SERVERNAME@RCCPAMPRD03
+
+
+
+kartikey.tripathi@redcross.org%cbacfsdev4%orcas1cfsdevap1.redcross.net@pampsmpcpc.redcross.org
+
+kartikey.tripathi@redcross.org%cbacfsdev4%orcas1cfsdevdb02.redcross.net@pampsmpcpc.redcross.org
+
+kartikey.tripathi@redcross.org%cbacfsuat1%orcas1cfsuatdb02.redcross.net@pampsmpcpc.redcross.org
+
+
+kartikey.tripathi@redcross.org%cbacfsuat1%orcas1cfsuatap01.redcross.net@pampsmpcpc.redcross.org
+
+[applmgr@orcas1cfsdevap1 bin]$ view arc_gl_intf_main.prog
+[applmgr@orcas1cfsdevap1 bin]$ cd $APPL_TOP
+[applmgr@orcas1cfsdevap1 appl]$ ls -lrt *.env
+-rw-r--r--. 1 applmgr oinstall 19589 Jun 10  2022 R12PRD01_orcas1cfsprdap02.env
+-rw-r--r--. 1 applmgr oinstall  1725 Jun 10  2022 APPSR12PRD01_orcas1cfsprdap02.env
+-rw-r--r--. 1 applmgr oinstall 19589 Jun 10  2022 R12PRD01_orcas1cfsprdap03.env
+-rw-r--r--. 1 applmgr oinstall  1725 Jun 10  2022 APPSR12PRD01_orcas1cfsprdap03.env
+-rw-r--r--. 1 applmgr oinstall 19589 Jun 10  2022 R12PRD01_orcas1cfsprdap04.env
+-rw-r--r--. 1 applmgr oinstall  1725 Jun 10  2022 APPSR12PRD01_orcas1cfsprdap04.env
+-rw-r--r--. 1 applmgr oinstall  1716 Oct 12 14:52 APPSR12DEV01_orcas1cfsdevap1.env
+-rw-r--r--. 1 applmgr oinstall 19575 Oct 12 14:52 R12DEV01_orcas1cfsdevap1.env
+
+
+
+---
+- name: Stop all services
+  hosts: apr12dev01
+  gather_facts: yes
+  vars_prompt:
+    - name: "apps_password"
+      prompt: "Enter the APPS password:"
+      private: no
+    - name: "wls_password"
+      prompt: "Enter the WebLogic Server password:"
+      private: no
+  vars:
+    ansible_connection_timeout: 1800
+  tasks:
+    - name: Stop all services
+      expect:
+        command: ./adstpall.sh apps/{{ apps_password }}
+        chdir: /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/
+        responses:
+          "Enter the WebLogic Server password:": "{{ wls_password }}"
+        timeout: 900
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+      register: r
+
+    - debug:
+        var: r
+
+
+
+
+
+- name: perl
+  hosts: apr12dev01
+  vars:
+    ansible_connection_timeout: 1800
+  vars_prompt:
+    - name: "path_to_app_context_file"
+      prompt: "Enter the full path of Applications Context File [DEFAULT - /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/R12DEV01_orcas1cfsdevap1.xml]:"
+      default: "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/R12DEV01_orcas1cfsdevap1.xml"
+    - name: "weblogic_admin_password"
+      prompt: "Enter weblogic admin server password:"
+      private: no
+    - name: "apps_user_password"
+      prompt: "Enter the APPS user password:"
+      private: no
+
+
+
+sudo find / -name OSD.pm
+
+
+
+---
+- name: find exec
+  hosts: apr12dev01
+  vars:
+    ARC_INTF_TOP: "/cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0"
+  tasks:
+
+    - name: Set permissions on files and directories
+      shell: |
+        cd {{ ARC_INTF_TOP }}/dat/inbound
+        find . -exec chmod g+s,o-w {} \;
+      async: 600
+      poll: 0
+      register: r
+
+    - debug:
+        var: r
+
+~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#!/bin/bash
+
+# Set the paths and variables
+input_file="valid_data.csv"     # Path to the input file
+log_file="sqlldr.log"           # Path to the SQL*Loader log file
+bad_file="sqlldr.bad"           # Path to the SQL*Loader bad file
+control_file="control.ctl"      # Path to the SQL*Loader control file
+db_username="your_username"     # Oracle database username
+db_password="your_password"     # Oracle database password
+db_service="your_service_name"  # Oracle database service name or SID
+
+# Run your script to generate the input file
+./your_script.sh
+
+# Run SQL*Loader to load the file into Oracle
+sqlldr "$db_username/$db_password@$db_service" control="$control_file" data="$input_file" log="$log_file" bad="$bad_file"
+
+# Check the SQL*Loader exit code
+if [ $? -eq 0 ]; then
+    echo "Data loaded successfully."
+else
+    echo "Data loading failed. Please check the log file for details."
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+select count(*) from valid_data;
+
+
+select * from valid_data;
+
+
+
+SQL> desc valid_data
+ Name					   Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SR						    NUMBER
+ NAME						    VARCHAR2(100)
+ GENDER 					    VARCHAR2(10)
+ AGE						    NUMBER
+ DATE1				          VARCHAR2(20)
+ COUNTRY					    VARCHAR2(30)
+
+
+
+
+
+
+[oracle@easy sandy12]$ sqlldr control='/home/oracle/control.ctl' data = 'valid_data.csv' log='/home/oracle/sample.log' 
+Username:sys as sysdba
+Password:
+
+SQL*Loader: Release 19.0.0.0.0 - Production on Thu May 11 19:49:13 2023
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+Path used:      Conventional
+Commit point reached - logical record count 250
+Commit point reached - logical record count 265
+
+Table VALID_DATA:
+  264 Rows successfully loaded.
+
+Check the log file:
+  /home/oracle/sample.log
+for more information about the load.
+[oracle@easy sandy12]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu May 11 19:58:20 2023
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#!/bin/bash
+
+sudo yum update
+
+sudo yum install httpd.x86_64
+
+sudo systemctl start httpd.service
+
+sudo systemctl enable httpd.service
+
+sudo yum install ruby
+
+sudo yum install wget
+
+cd /home/ec2-user
+
+wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install
+
+chmod +x ./install
+
+sudo ./install auto
+
+sudo yum install -y python-pip
+
+sudo pip install awscli
+
+#sudo amazon-linux-extras install java-openjdk11
+
+echo "Hello Khalid from $(hostname -f) .Created By UserData In Terraform" > /var/www/html/index.html
+
+
+
+
+
+
+
+
+
+
+
+- name: add lib data
+      lineinfile:
+        path: "{{ FND_TOP }}/patch/115/bin/txkManageDBConnectionPool.pl"
+        line: "use lib '/cfsdev/r12dev01/fs1/EBSapps/appl/au/12.0.0/perl';"
+        insertbefore: '^use strict;'
+      register: pl
+      tags:
+       - ssd
+    - debug:
+        var: pl
+      tags:
+       - ssd
+
+
+
+
+

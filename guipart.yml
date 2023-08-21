@@ -1,0 +1,489 @@
+---
+- name: The 4.1.1
+  hosts: "{{ host }}"
+  gather_facts: yes
+  vars_prompt:
+    - name: "vars_file"
+      prompt: "Which vars file do you want to use? (dev/test/prod)"
+      private: no
+    - name: "host"
+      prompt: "Enter the hostname of the server to configure (apr12dev01/apr12tst01)"
+      private: no
+  vars_files:
+    - "{{ vars_file }}.yml"
+    - pass.yml
+  vars:
+    ansible_connection_timeout: 86400
+  tasks:
+
+    - name: Update the Number of Processes for concurrent Managers
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_CONCURRENT_QUEUE_SIZE A
+         SET A.MIN_PROCESSES='5',
+         A.MAX_PROCESSES='5'
+         WHERE A.CONCURRENT_QUEUE_ID=(SELECT B.CONCURRENT_QUEUE_ID FROM
+         FND_CONCURRENT_QUEUES_VL B WHERE USER_CONCURRENT_QUEUE_NAME='ARC OM Manager');
+         COMMIT;
+         UPDATE FND_CONCURRENT_QUEUES_VL
+         SET MAX_PROCESSES='5',
+         MIN_PROCESSES='5',
+         TARGET_PROCESSES='5'
+         WHERE USER_CONCURRENT_QUEUE_NAME='ARC OM Manager';
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r1
+    - debug:
+        var: r1.stdout_lines
+
+    - name: Update the Number of Processes for concurrent Managers
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_CONCURRENT_QUEUE_SIZE A
+         SET A.MIN_PROCESSES='10',
+         A.MAX_PROCESSES='10'
+         WHERE A.CONCURRENT_QUEUE_ID=(SELECT B.CONCURRENT_QUEUE_ID FROM
+         FND_CONCURRENT_QUEUES_VL B WHERE B.USER_CONCURRENT_QUEUE_NAME='Standard Manager');
+         COMMIT;
+         UPDATE FND_CONCURRENT_QUEUES_VL
+         SET MAX_PROCESSES='10',
+         MIN_PROCESSES='10',
+         TARGET_PROCESSES='10'
+         WHERE USER_CONCURRENT_QUEUE_NAME='Standard Manager';
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r2
+    - debug:
+        var: r2.stdout_lines
+
+    - name: 4.1.15b
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE APPS.FND_CONCURRENT_PROGRAMS FCP
+         SET ENABLED_FLAG='N'
+         WHERE FCP.CONCURRENT_PROGRAM_ID =
+         (SELECT FCPT.CONCURRENT_PROGRAM_ID FROM APPS.FND_CONCURRENT_PROGRAMS_TL FCPT WHERE
+         UPPER(FCPT.USER_CONCURRENT_PROGRAM_NAME) LIKE  UPPER('ARC Check Print Proc'));
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r3
+    - debug:
+        var: r3.stdout_lines
+
+    - name: 4.1.16
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET MEANING='/ziptst/UTL_FILE/r12tst01'
+         WHERE LOOKUP_TYPE='ARC-CONCUR'
+         AND LOOKUP_CODE='CONCUR_ACTIVE_LOCATION';
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r4
+    - debug:
+       var: r4.stdout_lines
+
+    - name: 4.1.17
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='.txt.tst'
+         WHERE LOOKUP_TYPE='ARC_EIPP_DEFAULTS'
+         AND LOOKUP_CODE IN ('HP_BULK_SUFFIX','HP_CLOSED_SUFFIX');
+         COMMIT;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='.xml.tst'
+         WHERE LOOKUP_TYPE='ARC_EIPP_DEFAULTS'
+         AND LOOKUP_CODE IN ('HP_XML_SUFFIX');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r5
+    - debug:
+        var: r5.stdout_lines
+
+    - name: 4.1.18
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET MEANING='/cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0/dat/outbound/eippact',
+         DESCRIPTION='/cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0/dat/outbound/eippactive'
+         WHERE LOOKUP_TYPE='ARC-EMERGIS'
+         AND LOOKUP_CODE IN ('EIPPACTIVE_LOCATION');
+         COMMIT;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET MEANING='Zubair.shaikh@redcross.org'
+         WHERE LOOKUP_TYPE='ARC-EMERGIS'
+         AND LOOKUP_CODE IN ('IC_EMAIL_ADDRESS');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r6
+    - debug:
+        var: r6.stdout_lines
+
+    - name: 4.1.19
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET MEANING='cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0.dat/outbound/',
+         DESCRIPTION='/cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0/dat/outbound/ddcoe_active'
+         WHERE LOOKUP_TYPE='ARC-DDCOE-BB-VALUES'
+         AND LOOKUP_CODE IN ('ARCDDCOE_ACTIVE_LOC');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r7
+    - debug:
+        var: r7.stdout_lines
+
+    - name: 4.1.20
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='/cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0/dat/outbound/adpgl_active'
+         WHERE LOOKUP_TYPE='ARC_GL_TO_ADP'
+         AND LOOKUP_CODE IN ('ARC_GLFILE_ACTIVE');
+         COMMIT;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='/cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0/dat/outbound/adpgl_active'
+         WHERE LOOKUP_TYPE='ARC_GL_TO_ADP'
+         AND LOOKUP_CODE IN ('ARC_GLFILE_ARCHIVE');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r8
+    - debug:
+        var: r8.stdout_lines
+
+    - name: 4.1.21
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET MEANING='Zubair.Shaikh@redcross.org'
+         WHERE LOOKUP_TYPE='ARC_EP_CUST_OUTBOUND'
+         AND LOOKUP_CODE IN ('ARC_EP_EMAIL');
+         COMMIT;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET MEANING='/cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0/dat/outbound/biocust'
+         WHERE LOOKUP_TYPE='ARC_EP_CUST_OUTBOUND'
+         AND LOOKUP_CODE IN ('ARC_EP_FILE_PATH');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r9
+    - debug:
+        var: r9.stdout_lines
+
+    - name: 4.1.21b
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_PROFILE_OPTION_VALUES B
+         SET B.PROFILE_OPTION_VALUE='/cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0/'
+         WHERE B.PROFILE_OPTION_ID=(SELECT A.PROFILE_OPTION_ID FROM FND_PROFILE_OPTIONS_VL A
+         WHERE A.USER_PROFILE_OPTION_NAME= 'ARC: Custom TOP Directory CM');
+         COMMIT;
+         UPDATE FND_PROFILE_OPTION_VALUES B
+         SET B.PROFILE_OPTION_VALUE='/cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0'
+         WHERE B.PROFILE_OPTION_ID=(SELECT A.PROFILE_OPTION_ID FROM FND_PROFILE_OPTIONS_VL A
+         WHERE A.USER_PROFILE_OPTION_NAME= 'ARC: Custom TOP Directory DB');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r10
+    - debug:
+        var: r10.stdout_lines
+
+    - name: 4.1.22
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_FLEX_VALUES_VL B
+         SET B.ENABLED_FLAG='N'
+         WHERE B.FLEX_VALUE_SET_ID =(SELECT A.FLEX_VALUE_SET_ID FROM FND_FLEX_VALUE_SETS A
+         WHERE A.FLEX_VALUE_SET_NAME='ARC VCARD Exception Email Addr');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r11
+    - debug:
+        var: r11.stdout_lines
+
+    - name: 4.1.23
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_PROFILE_OPTION_VALUES B
+         SET B.PROFILE_OPTION_VALUE='TEST'
+         WHERE B.PROFILE_OPTION_ID=(SELECT A.PROFILE_OPTION_ID FROM FND_PROFILE_OPTIONS_VL A
+         WHERE A.USER_PROFILE_OPTION_NAME='ARC_INSTANCE_NAME');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r12
+    - debug:
+        var: r12.stdout_lines
+
+    - name: 4.1.24
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_PROFILE_OPTION_VALUES B
+         SET B.PROFILE_OPTION_VALUE='t0003297klmp'
+         WHERE B.PROFILE_OPTION_ID=(SELECT A.PROFILE_OPTION_ID FROM FND_PROFILE_OPTIONS_VL A
+         WHERE A.USER_PROFILE_OPTION_NAME='ARC Concur Entity Id');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r13
+    - debug:
+        var: r13.stdout_lines
+
+    - name: 4.1.25
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_PROFILE_OPTION_VALUES B
+         SET B.PROFILE_OPTION_VALUE='/cfstst/r12tst01/tst1229/fs_ne/interfaces/cust_R12TST01/1.0/setup/text'
+         WHERE B.PROFILE_OPTION_ID=(SELECT A.PROFILE_OPTION_ID FROM FND_PROFILE_OPTIONS_VL A
+         WHERE A.USER_PROFILE_OPTION_NAME='PO: In File Path');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r14
+    - debug:
+        var: r14.stdout_lines
+
+    - name: 4.1.27
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_PROFILE_OPTION_VALUES B
+         SET B.PROFILE_OPTION_VALUE='cfsosrelaytest.redcross.net'
+         WHERE B.PROFILE_OPTION_ID=(SELECT A.PROFILE_OPTION_ID FROM FND_PROFILE_OPTIONS_VL A
+         WHERE A.USER_PROFILE_OPTION_NAME='ARC Email Relay Server');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r15
+    - debug:
+        var: r15.stdout_lines
+
+    - name: 4.1.28
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_FLEX_VALUES_VL B
+         SET B.ENABLED_FLAG='N'
+         WHERE B.FLEX_VALUE_SET_ID =(SELECT A.FLEX_VALUE_SET_ID FROM FND_FLEX_VALUE_SETS A
+         WHERE A.FLEX_VALUE_SET_NAME='ARC VCARD Exception Email Addr')
+         AND B.FLEX_VALUE NOT IN ('rupa.nandakumar@redcross.org');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r16
+    - debug:
+        var: r16.stdout_lines
+
+    - name: 4.1.29
+      shell: |
+        ORACLE_SID={{ oracle_sid }}
+        LD_LIBRARY_PATH={{ oracle_home}}/lib
+        {{ sqlplus_executable }} apps/REDCROSS1@{{ container }} << EOF
+         select name, open_mode from V\$database;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='/cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0/dat/outbound/ariba_active'
+         WHERE LOOKUP_TYPE='ARC ARIBA LOOKUPS'
+         AND LOOKUP_CODE IN ('ARIBA_ACTIVE');
+         COMMIT;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='/cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0/dat/outbound/ariba_active_weekly'
+         WHERE LOOKUP_TYPE='ARC ARIBA LOOKUPS'
+         AND LOOKUP_CODE IN ('ARIBA_ACTIVE_WEEKLY');
+         COMMIT;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='/cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0/dat/outbound/ariba_active'
+         WHERE LOOKUP_TYPE='ARC ARIBA LOOKUPS'
+         AND LOOKUP_CODE IN ('ARIBA_ARCHIVE');
+         COMMIT;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='/cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0/dat/outbound/scanone_active'
+         WHERE LOOKUP_TYPE='ARC ARIBA LOOKUPS'
+         AND LOOKUP_CODE IN ('SCANONE_ACTIVE');
+         COMMIT;
+         UPDATE FND_LOOKUP_VALUES_VL
+         SET DESCRIPTION='/cfsuat/r12uat01/uat/fs_ne/interfaces/cust_R12UAT01/1.0/dat/outbound/scanone_active'
+         WHERE LOOKUP_TYPE='ARC ARIBA LOOKUPS'
+         AND LOOKUP_CODE IN ('SCANONE_ARCHIVE');
+         COMMIT;
+         exit;
+         EOF
+      environment:
+        ORACLE_SID: "{{ oracle_sid }}"
+        ORACLE_HOME: "{{ oracle_home }}"
+        LD_LIBRARY_PATH: "{{ oracle_home }}/lib"
+      become: true
+      become_user: oracle
+      delegate_to: oracle
+      register: r17
+    - debug:
+        var: r17.stdout_lines
+

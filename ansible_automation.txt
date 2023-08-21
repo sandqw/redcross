@@ -1,0 +1,1992 @@
+[apr12dev01@orcas1cfsdevap1 ~]$ source test/bin/activate
+(test) [apr12dev01@orcas1cfsdevap1 ~]$
+(test) [apr12dev01@orcas1cfsdevap1 ~]$ cd ansible7/redcross/automation
+(test) [apr12dev01@orcas1cfsdevap1 automation]$
+(test) [apr12dev01@orcas1cfsdevap1 automation]$ ansible-playbook -i hosts mainautomation.yml --ask-vault-pass
+[DEPRECATION WARNING]: Ansible will require Python 3.8 or newer on the controller starting with Ansible 2.12. Current version: 3.6.8 (default,
+Nov 18 2021, 10:07:16) [GCC 4.8.5 20150623 (Red Hat 4.8.5-44.0.3)]. This feature will be removed from ansible-core in version 2.12. Deprecation
+ warnings can be disabled by setting deprecation_warnings=False in ansible.cfg.
+Vault password:
+[WARNING]: Skipping callback plugin 'profiles_roles', unable to load
+/usr/lib64/python3.6/site-packages/cryptography/hazmat/backends/openssl/hmac.py:62: UserWarning: implicit cast from 'char *' to a different pointer type: will be forbidden in the future (check that the types are as you expect; use an explicit ffi.cast() if they are correct)
+  res = self._backend._lib.HMAC_Update(self._ctx, data_ptr, len(data))
+/usr/lib64/python3.6/site-packages/cryptography/hazmat/backends/openssl/ciphers.py:114: UserWarning: implicit cast from 'char *' to a different pointer type: will be forbidden in the future (check that the types are as you expect; use an explicit ffi.cast() if they are correct)
+  operation,
+/usr/lib64/python3.6/site-packages/cryptography/hazmat/backends/openssl/ciphers.py:147: UserWarning: implicit cast from 'char *' to a different pointer type: will be forbidden in the future (check that the types are as you expect; use an explicit ffi.cast() if they are correct)
+  self._ctx, outbuf, outlen, inbuf, inlen
+Which vars file do you want to use? (dev/test/prod): dev
+Enter the hostname of the server to configure (apr12dev01/apr12tst01): apr12dev01
+
+PLAY [The 4.1.1] *******************************************************************************************************************************
+
+TASK [Gathering Facts] *************************************************************************************************************************
+Tuesday 13 June 2023  11:58:51 -0400 (0:00:08.001)       0:00:08.001 **********
+ok: [apr12dev01]
+
+TASK [mv tst to dev] ***************************************************************************************************************************
+Tuesday 13 June 2023  11:58:54 -0400 (0:00:02.403)       0:00:10.404 **********
+fatal: [apr12dev01]: FAILED! => {"changed": true, "cmd": "mv cust_R12PRD01 cust_R12DEV01", "delta": "0:00:00.044988", "end": "2023-06-13 11:58:54.623186", "msg": "non-zero return code", "rc": 1, "start": "2023-06-13 11:58:54.578198", "stderr": "mv: cannot stat ‘cust_R12PRD01’: No such file or directory", "stderr_lines": ["mv: cannot stat ‘cust_R12PRD01’: No such file or directory"], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:58:54 -0400 (0:00:00.704)       0:00:11.108 **********
+ok: [apr12dev01] => {
+    "result": {
+        "changed": true,
+        "cmd": "mv cust_R12PRD01 cust_R12DEV01",
+        "delta": "0:00:00.044988",
+        "end": "2023-06-13 11:58:54.623186",
+        "failed": true,
+        "msg": "non-zero return code",
+        "rc": 1,
+        "start": "2023-06-13 11:58:54.578198",
+        "stderr": "mv: cannot stat ‘cust_R12PRD01’: No such file or directory",
+        "stderr_lines": [
+            "mv: cannot stat ‘cust_R12PRD01’: No such file or directory"
+        ],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [Changing the file name] ******************************************************************************************************************
+Tuesday 13 June 2023  11:58:54 -0400 (0:00:00.083)       0:00:11.192 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:58:55 -0400 (0:00:00.727)       0:00:11.919 **********
+ok: [apr12dev01] => {
+    "riki": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/customR12DEV01_orcas1cfsdevap1.env (content)",
+                "before": "",
+                "before_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/customR12DEV01_orcas1cfsdevap1.env (content)"
+            },
+            {
+                "after_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/customR12DEV01_orcas1cfsdevap1.env (file attributes)",
+                "before_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/customR12DEV01_orcas1cfsdevap1.env (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [Edit the Custom*.env files in the $INST_TOP/appl/admin directory] ************************************************************************
+Tuesday 13 June 2023  11:58:55 -0400 (0:00:00.084)       0:00:12.003 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:58:56 -0400 (0:00:00.539)       0:00:12.542 **********
+ok: [apr12dev01] => {
+    "l": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/customR12DEV01_orcas1cfsdevap1.env (content)",
+                "before": "",
+                "before_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/customR12DEV01_orcas1cfsdevap1.env (content)"
+            },
+            {
+                "after_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/customR12DEV01_orcas1cfsdevap1.env (file attributes)",
+                "before_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/customR12DEV01_orcas1cfsdevap1.env (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [Changing the SID location] ***************************************************************************************************************
+Tuesday 13 June 2023  11:58:56 -0400 (0:00:00.084)       0:00:12.627 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:58:56 -0400 (0:00:00.547)       0:00:13.174 **********
+ok: [apr12dev01] => {
+    "pl": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "/cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/cfsm/cfsmon.env (content)",
+                "before": "",
+                "before_header": "/cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/cfsm/cfsmon.env (content)"
+            },
+            {
+                "after_header": "/cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/cfsm/cfsmon.env (file attributes)",
+                "before_header": "/cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/cfsm/cfsmon.env (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [Setting the passwd] **********************************************************************************************************************
+Tuesday 13 June 2023  11:58:56 -0400 (0:00:00.084)       0:00:13.259 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:58:57 -0400 (0:00:00.539)       0:00:13.799 **********
+ok: [apr12dev01] => {
+    "sir": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/fnd/12.0.0/secure/R12DEV01.dbc (content)",
+                "before": "",
+                "before_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/fnd/12.0.0/secure/R12DEV01.dbc (content)"
+            },
+            {
+                "after_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/fnd/12.0.0/secure/R12DEV01.dbc (file attributes)",
+                "before_header": "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/fnd/12.0.0/secure/R12DEV01.dbc (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [Take a backup of fnd_secure] *************************************************************************************************************
+Tuesday 13 June 2023  11:58:57 -0400 (0:00:00.095)       0:00:13.894 **********
+changed: [apr12dev01 -> oracle]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:58:59 -0400 (0:00:01.568)       0:00:15.462 **********
+ok: [apr12dev01] => {
+    "name.stdout_lines": [
+        "",
+        "SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 13 11:58:58 2023",
+        "Version 19.17.0.0.0",
+        "",
+        "Copyright (c) 1982, 2022, Oracle.  All rights reserved.",
+        "",
+        "Last Successful login time: Tue Jun 13 2023 11:54:24 -04:00",
+        "",
+        "Connected to:",
+        "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0",
+        "",
+        "SQL> ",
+        "NAME\t  OPEN_MODE",
+        "--------- --------------------",
+        "R12DEVCD  READ WRITE",
+        "",
+        "SQL> ",
+        "Session altered.",
+        "",
+        "SQL> create table apps.fnd_user_bkp_13062023 as select * from fnd_user",
+        "                  *",
+        "ERROR at line 1:",
+        "ORA-00955: name is already used by an existing object",
+        "",
+        "",
+        "SQL> create table apps.fnd_oracle_userid_bkp_13062023 as select * from fnd_oracle_userid",
+        "                  *",
+        "ERROR at line 1:",
+        "ORA-00955: name is already used by an existing object",
+        "",
+        "",
+        "SQL> ",
+        "TABLE_NAME",
+        "--------------------------------------------------------------------------------",
+        "FND_DESCR_FLEX_COLUMN_USAGES_B",
+        "FND_ORACLE_USERID_05APR21",
+        "FND_ORACLE_USERID_BACKUP",
+        "FND_ORACLE_USERID_BKP_13062023",
+        "FND_USER_05APR21",
+        "FND_USER_BACKUP",
+        "FND_USER_BKP_13062023",
+        "",
+        "7 rows selected.",
+        "",
+        "SQL> ",
+        "  COUNT(*)",
+        "----------",
+        "      4160",
+        "",
+        "SQL> Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0"
+    ]
+}
+
+TASK [Stop all services] ***********************************************************************************************************************
+Tuesday 13 June 2023  11:58:59 -0400 (0:00:00.085)       0:00:15.548 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:59:22 -0400 (0:00:22.937)       0:00:38.485 **********
+ok: [apr12dev01] => {
+    "r1.stdout_lines": [
+        "",
+        "You are running adstpall.sh version 120.22.12020000.7",
+        "",
+        "",
+        "Enter the WebLogic Server password: ",
+        "The logfile for this session is located at /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adstpall.log",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adcmctl.sh stop ",
+        "Timeout specified in context file: 1000 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adcmctl.sh version 120.19.12020000.7",
+        "",
+        "Shutting down concurrent managers for R12DEV01 ...",
+        "ORACLE Password:",
+        "Submitted request 65509410 for CONCURRENT FND SHUTDOWN ",
+        "",
+        "",
+        "adcmctl.sh: exiting with status 0",
+        "",
+        "",
+        "adcmctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adcmctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adapcctl.sh stop ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adapcctl.sh version 120.0.12020000.6",
+        "",
+        "Stopping OPMN managed Oracle HTTP Server (OHS) instance ...",
+        "",
+        "adapcctl.sh: exiting with status 2",
+        "",
+        "adapcctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adapcctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/jtffmctl.sh stop ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running jtffmctl.sh version 120.3.12020000.4",
+        "",
+        "Shutting down Fulfillment Server for R12DEV01 on port 9300 ...",
+        "",
+        "jtffmctl.sh: exiting with status 0",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adopmnctl.sh stop ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adopmnctl.sh version 120.0.12020000.2",
+        "",
+        "Stopping Oracle Process Manager (OPMN)  and the managed processes ...",
+        "opmnctl stopall: opmn is not running.",
+        "",
+        "adopmnctl.sh: exiting with status 0",
+        "",
+        "adopmnctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adopmnctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "forms-c4ws_server1 is already shutdown.",
+        "",
+        "",
+        "oafm_server1 is already shutdown.",
+        "",
+        "",
+        "forms_server1 is already shutdown.",
+        "",
+        "",
+        "oacore_server1 is already shutdown.",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adalnctl.sh stop ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "adalnctl.sh version 120.3.12020000.4",
+        "",
+        "Listener APPS_R12DEV01 has already been stopped.",
+        "",
+        "adalnctl.sh: exiting with status 2",
+        "",
+        "",
+        "adalnctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adalnctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adadminsrvctl.sh stop -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adadminsrvctl.sh version 120.10.12020000.11",
+        "",
+        "",
+        " The AdminServer is already shutdown",
+        "",
+        "AdminServer logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/AdminServer/logs",
+        "",
+        "adadminsrvctl.sh: exiting with status 2",
+        "",
+        "adadminsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adadminsrvctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adnodemgrctl.sh stop -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adnodemgrctl.sh version 120.11.12020000.12",
+        "",
+        "",
+        "The Node Manager is already shutdown",
+        "",
+        "NodeManager log is located at /cfsdev/r12dev01/fs1/FMW_Home/wlserver_10.3/common/nodemanager/nmHome1",
+        "",
+        "adnodemgrctl.sh: exiting with status 2",
+        "",
+        "adnodemgrctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adnodemgrctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "All enabled services on this node are stopped.",
+        "",
+        "adstpall.sh:Exiting with status 0",
+        "",
+        "adstpall.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adstpall.log for more information ...  "
+    ]
+}
+
+TASK [Change APPSLSYS password in the database] ************************************************************************************************
+Tuesday 13 June 2023  11:59:22 -0400 (0:00:00.106)       0:00:38.592 **********
+changed: [apr12dev01 -> localhost]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:59:26 -0400 (0:00:04.062)       0:00:42.654 **********
+ok: [apr12dev01] => {
+    "rd": {
+        "changed": true,
+        "cmd": "/cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/FNDCPASS apps/REDCROSS1 0 Y system/redcross1 SYSTEM APPLSYS REDCROSS1\n",
+        "delta": "0:00:03.750619",
+        "end": "2023-06-13 11:59:26.203918",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 11:59:22.453299",
+        "stderr": "Log filename : L5509411.log\n\n\nReport filename : O5509411.out",
+        "stderr_lines": [
+            "Log filename : L5509411.log",
+            "",
+            "",
+            "Report filename : O5509411.out"
+        ],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [Change ORACLE password in the database] **************************************************************************************************
+Tuesday 13 June 2023  11:59:26 -0400 (0:00:00.121)       0:00:42.776 **********
+changed: [apr12dev01 -> localhost]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:59:26 -0400 (0:00:00.592)       0:00:43.368 **********
+ok: [apr12dev01] => {
+    "rd1": {
+        "changed": true,
+        "cmd": "/cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/FNDCPASS apps/REDCROSS1 0 Y system/redcross1 ORACLE appsarch REDCROSS1\n",
+        "delta": "0:00:00.289381",
+        "end": "2023-06-13 11:59:26.927285",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 11:59:26.637904",
+        "stderr": "Log filename : L5509412.log\n\n\nReport filename : O5509412.out",
+        "stderr_lines": [
+            "Log filename : L5509412.log",
+            "",
+            "",
+            "Report filename : O5509412.out"
+        ],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [Change ALLORACLE password in the database] ***********************************************************************************************
+Tuesday 13 June 2023  11:59:27 -0400 (0:00:00.094)       0:00:43.462 **********
+changed: [apr12dev01 -> localhost]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  11:59:29 -0400 (0:00:02.720)       0:00:46.183 **********
+ok: [apr12dev01] => {
+    "rd2": {
+        "changed": true,
+        "cmd": "/cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/FNDCPASS apps/REDCROSS1 0 Y system/redcross1 ALLORACLE REDCROSS1\n",
+        "delta": "0:00:02.429217",
+        "end": "2023-06-13 11:59:29.739403",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 11:59:27.310186",
+        "stderr": "Log filename : L5509413.log\n\n\nReport filename : O5509413.out",
+        "stderr_lines": [
+            "Log filename : L5509413.log",
+            "",
+            "",
+            "Report filename : O5509413.out"
+        ],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [adautocfg] *******************************************************************************************************************************
+Tuesday 13 June 2023  11:59:29 -0400 (0:00:00.086)       0:00:46.270 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:03:07 -0400 (0:03:37.677)       0:04:23.948 **********
+ok: [apr12dev01] => {
+    "r3.stdout_lines": [
+        "Enter the APPS user password:",
+        "",
+        "The log file for this session is located at: /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/log/06131159/adconfig.log",
+        "",
+        "",
+        "wlsDomainName: EBS_domain",
+        "WLS Domain Name is VALID.",
+        "AutoConfig is configuring the Applications environment...",
+        "",
+        "AutoConfig will consider the custom templates if present.",
+        "\tUsing CONFIG_HOME location     : /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1",
+        "\tClasspath                   : /cfsdev/r12dev01/fs1/FMW_Home/Oracle_EBS-app1/shared-libs/ebs-appsborg/WEB-INF/lib/ebsAppsborgManifest.jar:/cfsdev/r12dev01/fs1/EBSapps/comn/java/classes",
+        "",
+        "\tUsing Context file          : /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/R12DEV01_orcas1cfsdevap1.xml",
+        "",
+        "Context Value Management will now update the Context file",
+        "",
+        "\tUpdating Context file...COMPLETED",
+        "",
+        "\tAttempting upload of Context file and templates to database...COMPLETED",
+        "",
+        "Configuring templates from all of the product tops...",
+        "\tConfiguring AD_TOP........COMPLETED",
+        "\tConfiguring FND_TOP.......COMPLETED",
+        "\tConfiguring ICX_TOP.......COMPLETED",
+        "\tConfiguring MSC_TOP.......COMPLETED",
+        "\tConfiguring IEO_TOP.......COMPLETED",
+        "\tConfiguring BIS_TOP.......COMPLETED",
+        "\tConfiguring CZ_TOP........COMPLETED",
+        "\tConfiguring SHT_TOP.......COMPLETED",
+        "\tConfiguring AMS_TOP.......COMPLETED",
+        "\tConfiguring CCT_TOP.......COMPLETED",
+        "\tConfiguring WSH_TOP.......COMPLETED",
+        "\tConfiguring CLN_TOP.......COMPLETED",
+        "\tConfiguring OKE_TOP.......COMPLETED",
+        "\tConfiguring OKL_TOP.......COMPLETED",
+        "\tConfiguring OKS_TOP.......COMPLETED",
+        "\tConfiguring CSF_TOP.......COMPLETED",
+        "\tConfiguring IBY_TOP.......COMPLETED",
+        "\tConfiguring JTF_TOP.......COMPLETED",
+        "\tConfiguring MWA_TOP.......COMPLETED",
+        "\tConfiguring CN_TOP........COMPLETED",
+        "\tConfiguring CSI_TOP.......COMPLETED",
+        "\tConfiguring WIP_TOP.......COMPLETED",
+        "\tConfiguring CSE_TOP.......COMPLETED",
+        "\tConfiguring EAM_TOP.......COMPLETED",
+        "\tConfiguring GMF_TOP.......COMPLETED",
+        "\tConfiguring PON_TOP.......COMPLETED",
+        "\tConfiguring FTE_TOP.......COMPLETED",
+        "\tConfiguring ONT_TOP.......COMPLETED",
+        "\tConfiguring AR_TOP........COMPLETED",
+        "\tConfiguring AHL_TOP.......COMPLETED",
+        "\tConfiguring IES_TOP.......COMPLETED",
+        "\tConfiguring OZF_TOP.......COMPLETED",
+        "\tConfiguring CSD_TOP.......COMPLETED",
+        "\tConfiguring IGC_TOP.......COMPLETED",
+        "",
+        "AutoConfig completed successfully."
+    ]
+}
+
+TASK [adadminsrvctl] ***************************************************************************************************************************
+Tuesday 13 June 2023  12:03:07 -0400 (0:00:00.088)       0:04:24.036 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:05:01 -0400 (0:01:53.450)       0:06:17.487 **********
+ok: [apr12dev01] => {
+    "r4.stdout_lines": [
+        "",
+        "You are running adadminsrvctl.sh version 120.10.12020000.11",
+        "",
+        "Enter the WebLogic Admin password:",
+        "Enter the APPS Schema password:",
+        "Starting WLS Admin Server...",
+        "Refer /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adadminsrvctl.txt for details",
+        "",
+        "AdminServer logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/AdminServer/logs",
+        "",
+        "adadminsrvctl.sh: exiting with status 0",
+        "",
+        "adadminsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adadminsrvctl.txt for more information ...  "
+    ]
+}
+
+TASK [add lib data] ****************************************************************************************************************************
+Tuesday 13 June 2023  12:05:01 -0400 (0:00:00.126)       0:06:17.614 **********
+ok: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:05:01 -0400 (0:00:00.604)       0:06:18.218 **********
+ok: [apr12dev01] => {
+    "pl": {
+        "backup": "",
+        "changed": false,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "/cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/patch/115/bin/txkManageDBConnectionPool.pl (content)",
+                "before": "",
+                "before_header": "/cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/patch/115/bin/txkManageDBConnectionPool.pl (content)"
+            },
+            {
+                "after_header": "/cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/patch/115/bin/txkManageDBConnectionPool.pl (file attributes)",
+                "before_header": "/cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/patch/115/bin/txkManageDBConnectionPool.pl (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": ""
+    }
+}
+
+TASK [Update WebLogic Datasource Password] *****************************************************************************************************
+Tuesday 13 June 2023  12:05:01 -0400 (0:00:00.163)       0:06:18.381 **********
+changed: [apr12dev01 -> localhost]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:05:33 -0400 (0:00:31.189)       0:06:49.571 **********
+ok: [apr12dev01] => {
+    "r5.stdout_lines": [
+        "Please select from list of valid options",
+        "\tupdateDSPassword - Update WebLogic Datasource Password",
+        "\tupdateDSJdbcUrl  - Update WebLogic Datasource Connection String",
+        "Enter Your Choice : Enter the full path of Applications Context File [DEFAULT - /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/appl/admin/R12DEV01_orcas1cfsdevap1.xml]: Enter weblogic admin server password: ",
+        "Enter the APPS user password: ",
+        "",
+        "",
+        "---------------------------------------------",
+        "Performing Steps for option=updateDSPassword",
+        "---------------------------------------------",
+        "",
+        "Updating WLS DataSource Password ",
+        "--------------------------------",
+        "",
+        "Initializing WebLogic Scripting Tool (WLST) ...",
+        "",
+        "Welcome to WebLogic Server Administration Scripting Shell",
+        "",
+        "Type help() for help on available commands",
+        "",
+        "Connecting to t3://orcas1cfsdevap1.subnet3rad.vcn1.oraclevcn.com:7001 with userid weblogic ...",
+        "Successfully connected to Admin Server 'AdminServer' that belongs to domain 'EBS_domain'.",
+        "",
+        "Warning: An insecure protocol was used to connect to the ",
+        "server. To ensure on-the-wire security, the SSL port or ",
+        "Admin port should be used instead.",
+        "",
+        "Domain Update successful",
+        "------------------------"
+    ]
+}
+
+TASK [Stop all services] ***********************************************************************************************************************
+Tuesday 13 June 2023  12:05:33 -0400 (0:00:00.091)       0:06:49.662 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:06:08 -0400 (0:00:34.825)       0:07:24.487 **********
+ok: [apr12dev01] => {
+    "r6.stdout_lines": [
+        "",
+        "You are running adstpall.sh version 120.22.12020000.7",
+        "",
+        "",
+        "Enter the WebLogic Server password: ",
+        "The logfile for this session is located at /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adstpall.log",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adcmctl.sh stop ",
+        "Timeout specified in context file: 1000 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adcmctl.sh version 120.19.12020000.7",
+        "",
+        "Shutting down concurrent managers for R12DEV01 ...",
+        "ORACLE Password:",
+        "Submitted request 65509416 for CONCURRENT FND SHUTDOWN ",
+        "",
+        "",
+        "adcmctl.sh: exiting with status 0",
+        "",
+        "",
+        "adcmctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adcmctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adapcctl.sh stop ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adapcctl.sh version 120.0.12020000.6",
+        "",
+        "Stopping OPMN managed Oracle HTTP Server (OHS) instance ...",
+        "",
+        "adapcctl.sh: exiting with status 2",
+        "",
+        "adapcctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adapcctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/jtffmctl.sh stop ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running jtffmctl.sh version 120.3.12020000.4",
+        "",
+        "Shutting down Fulfillment Server for R12DEV01 on port 9300 ...",
+        "",
+        "jtffmctl.sh: exiting with status 0",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adopmnctl.sh stop ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adopmnctl.sh version 120.0.12020000.2",
+        "",
+        "Stopping Oracle Process Manager (OPMN)  and the managed processes ...",
+        "opmnctl stopall: opmn is not running.",
+        "",
+        "adopmnctl.sh: exiting with status 0",
+        "",
+        "adopmnctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adopmnctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/admanagedsrvctl.sh abort oacore_server1 -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running admanagedsrvctl.sh version 120.14.12020000.12",
+        "",
+        "Stopping oacore_server1...",
+        "",
+        " oacore_server1 is already shutdown",
+        "",
+        "Server specific logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/oacore_server1/logs",
+        "",
+        "admanagedsrvctl.sh: exiting with status 2",
+        "",
+        "admanagedsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adoacorectl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/admanagedsrvctl.sh abort forms_server1 -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running admanagedsrvctl.sh version 120.14.12020000.12",
+        "",
+        "Stopping forms_server1...",
+        "",
+        " forms_server1 is already shutdown",
+        "",
+        "Server specific logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/forms_server1/logs",
+        "",
+        "admanagedsrvctl.sh: exiting with status 2",
+        "",
+        "admanagedsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adformsctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/admanagedsrvctl.sh abort oafm_server1 -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running admanagedsrvctl.sh version 120.14.12020000.12",
+        "",
+        "Stopping oafm_server1...",
+        "",
+        " oafm_server1 is already shutdown",
+        "",
+        "Server specific logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/oafm_server1/logs",
+        "",
+        "admanagedsrvctl.sh: exiting with status 2",
+        "",
+        "admanagedsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adoafmctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adalnctl.sh stop ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "adalnctl.sh version 120.3.12020000.4",
+        "",
+        "Listener APPS_R12DEV01 has already been stopped.",
+        "",
+        "adalnctl.sh: exiting with status 2",
+        "",
+        "",
+        "adalnctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adalnctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adadminsrvctl.sh stop -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adadminsrvctl.sh version 120.10.12020000.11",
+        "",
+        "Stopping WLS Admin Server...",
+        "Refer /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adadminsrvctl.txt for details",
+        "",
+        "AdminServer logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/AdminServer/logs",
+        "",
+        "adadminsrvctl.sh: exiting with status 0",
+        "",
+        "adadminsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adadminsrvctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adnodemgrctl.sh stop -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adnodemgrctl.sh version 120.11.12020000.12",
+        "",
+        "",
+        "The Node Manager is already shutdown",
+        "",
+        "NodeManager log is located at /cfsdev/r12dev01/fs1/FMW_Home/wlserver_10.3/common/nodemanager/nmHome1",
+        "",
+        "adnodemgrctl.sh: exiting with status 2",
+        "",
+        "adnodemgrctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adnodemgrctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "All enabled services on this node are stopped.",
+        "",
+        "adstpall.sh:Exiting with status 0",
+        "",
+        "adstpall.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adstpall.log for more information ...  "
+    ]
+}
+
+TASK [Wait for tar command to complete] ********************************************************************************************************
+Tuesday 13 June 2023  12:06:08 -0400 (0:00:00.093)       0:07:24.581 **********
+Pausing for 60 seconds
+(ctrl+C then 'C' = continue early, ctrl+C then 'A' = abort)
+Press 'C' to continue the play or 'A' to abort
+ok: [apr12dev01]
+
+TASK [Recreate symbolic links] *****************************************************************************************************************
+Tuesday 13 June 2023  12:06:12 -0400 (0:00:04.376)       0:07:28.958 **********
+changed: [apr12dev01]
+
+TASK [Debug output] ****************************************************************************************************************************
+Tuesday 13 June 2023  12:06:13 -0400 (0:00:00.725)       0:07:29.683 **********
+ok: [apr12dev01] => {
+    "shell_output": {
+        "changed": true,
+        "cmd": "cd /cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin\nfor i in $(ls -tlr | grep ^l | grep fndcpesr | awk '{print $9}')\ndo\n  ls -tlr $i\n  rm $i\n  ln -s /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr $i\n  ls -tlr $i\ndone\n",
+        "delta": "0:00:00.197699",
+        "end": "2023-06-13 12:06:13.200107",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 12:06:13.002408",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:42 ARCPLMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCPLMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:43 ARCBHNMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCBHNMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:43 ARCEPCOBM -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCEPCOBM -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:43 ARCMSCRCTMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCMSCRCTMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:44 ARCAPLOAD -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCAPLOAD -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:44 ARCEIPPINV_EXE1 -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr\nlrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCEIPPINV_EXE1 -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+        "stdout_lines": [
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:42 ARCPLMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCPLMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:43 ARCBHNMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCBHNMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:43 ARCEPCOBM -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCEPCOBM -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:43 ARCMSCRCTMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCMSCRCTMSTR -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:44 ARCAPLOAD -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCAPLOAD -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 05:44 ARCEIPPINV_EXE1 -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr",
+            "lrwxrwxrwx. 1 apr12dev01 oinstall 57 Jun 13 12:06 ARCEIPPINV_EXE1 -> /cfsdev/r12dev01/fs1/EBSapps/appl/fnd/12.0.0/bin/fndcpesr"
+        ]
+    }
+}
+
+TASK [Recreate symbolic link] ******************************************************************************************************************
+Tuesday 13 June 2023  12:06:13 -0400 (0:00:00.086)       0:07:29.769 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:06:13 -0400 (0:00:00.541)       0:07:30.311 **********
+ok: [apr12dev01] => {
+    "kr": "VARIABLE IS NOT DEFINED!"
+}
+
+TASK [Recreate symbolic link] ******************************************************************************************************************
+Tuesday 13 June 2023  12:06:13 -0400 (0:00:00.054)       0:07:30.365 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:06:14 -0400 (0:00:00.547)       0:07:30.913 **********
+ok: [apr12dev01] => {
+    "kar": {
+        "changed": true,
+        "cmd": "ln -s /cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/lib/CUSTOM.plx CUSTOM.plx",
+        "delta": "0:00:00.048748",
+        "end": "2023-06-13 12:06:14.433955",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 12:06:14.385207",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [Recreate symbolic link] ******************************************************************************************************************
+Tuesday 13 June 2023  12:06:14 -0400 (0:00:00.085)       0:07:30.999 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:06:15 -0400 (0:00:00.555)       0:07:31.555 **********
+ok: [apr12dev01] => {
+    "kr": {
+        "changed": true,
+        "cmd": "ln -s /cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/lib/CUSTOM.pll CUSTOM.pll",
+        "delta": "0:00:00.048931",
+        "end": "2023-06-13 12:06:15.072111",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 12:06:15.023180",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [unlink ARXSGPO.rdf] **********************************************************************************************************************
+Tuesday 13 June 2023  12:06:15 -0400 (0:00:00.087)       0:07:31.642 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:06:15 -0400 (0:00:00.536)       0:07:32.179 **********
+ok: [apr12dev01] => {
+    "r9": {
+        "changed": true,
+        "cmd": "unlink ARXSGPO.rdf",
+        "delta": "0:00:00.044841",
+        "end": "2023-06-13 12:06:15.698534",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 12:06:15.653693",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [Sanity check] ****************************************************************************************************************************
+Tuesday 13 June 2023  12:06:15 -0400 (0:00:00.088)       0:07:32.268 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:02 -0400 (0:04:46.810)       0:12:19.078 **********
+ok: [apr12dev01] => {
+    "r10.stdout_lines": [
+        "",
+        "You are running adstrtal.sh version 120.24.12020000.11",
+        "",
+        "",
+        "Enter the WebLogic Server password: ",
+        "The logfile for this session is located at /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adstrtal.log",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/jtffmctl.sh start ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running jtffmctl.sh version 120.3.12020000.4",
+        "",
+        "Validating Fulfillment patch level via /cfsdev/r12dev01/fs1/EBSapps/comn/java/classes",
+        "Fulfillment patch level validated.",
+        "Starting Fulfillment Server for R12DEV01 on port 9300 ...",
+        "",
+        "jtffmctl.sh: exiting with status 0",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adopmnctl.sh start ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adopmnctl.sh version 120.0.12020000.2",
+        "",
+        "Starting Oracle Process Manager (OPMN) ...",
+        "",
+        "adopmnctl.sh: exiting with status 0",
+        "",
+        "adopmnctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adopmnctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adapcctl.sh start ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adapcctl.sh version 120.0.12020000.6",
+        "",
+        "Starting OPMN managed Oracle HTTP Server (OHS) instance ...",
+        "",
+        "adapcctl.sh: exiting with status 0",
+        "",
+        "adapcctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adapcctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adnodemgrctl.sh start -nopromptmsg ",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adnodemgrctl.sh version 120.11.12020000.12",
+        "",
+        "",
+        "Calling txkChkEBSDependecies.pl to perform dependency checks for ALL MANAGED SERVERS",
+        "Perl script txkChkEBSDependecies.pl got executed successfully",
+        "",
+        "",
+        "Starting the Node Manager...",
+        "Refer /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adnodemgrctl.txt for details",
+        "",
+        "NodeManager log is located at /cfsdev/r12dev01/fs1/FMW_Home/wlserver_10.3/common/nodemanager/nmHome1",
+        "",
+        "adnodemgrctl.sh: exiting with status 0",
+        "",
+        "adnodemgrctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adnodemgrctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "*** ALL THE FOLLOWING FILES ARE REQUIRED FOR RESOLVING RUNTIME ERRORS",
+        "*** Log File = /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/rgf/TXK/txkChkEBSDependecies_Tue_Jun_13_12_06_20_2023/txkChkEBSDependecies_Tue_Jun_13_12_06_20_2023.log ",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adalnctl.sh start ",
+        "Timeout specified in context file: 100 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "adalnctl.sh version 120.3.12020000.4",
+        "",
+        "Checking for FNDFS executable.",
+        "Starting listener process APPS_R12DEV01.",
+        "",
+        "adalnctl.sh: exiting with status 0",
+        "",
+        "",
+        "adalnctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adalnctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adcmctl.sh start ",
+        "Timeout specified in context file: 1000 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adcmctl.sh version 120.19.12020000.7",
+        "",
+        "Starting concurrent manager for R12DEV01 ...",
+        "Starting R12DEV01_0613@R12DEV01 Internal Concurrent Manager",
+        "Default printer is noprint",
+        "",
+        "adcmctl.sh: exiting with status 0",
+        "",
+        "",
+        "adcmctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adcmctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/adadminsrvctl.sh start -nopromptmsg ",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running adadminsrvctl.sh version 120.10.12020000.11",
+        "",
+        "Starting WLS Admin Server...",
+        "Refer /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adadminsrvctl.txt for details",
+        "",
+        "AdminServer logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/AdminServer/logs",
+        "",
+        "adadminsrvctl.sh: exiting with status 0",
+        "",
+        "adadminsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adadminsrvctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/admanagedsrvctl.sh start forms_server1 -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running admanagedsrvctl.sh version 120.14.12020000.12",
+        "",
+        "Starting forms_server1...",
+        "",
+        "Server specific logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/forms_server1/logs",
+        "",
+        "admanagedsrvctl.sh: exiting with status 0",
+        "",
+        "admanagedsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adformsctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/admanagedsrvctl.sh start oafm_server1 -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running admanagedsrvctl.sh version 120.14.12020000.12",
+        "",
+        "Starting oafm_server1...",
+        "",
+        "Server specific logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/oafm_server1/logs",
+        "",
+        "admanagedsrvctl.sh: exiting with status 0",
+        "",
+        "admanagedsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adoafmctl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "Executing service control script:",
+        "/cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/admin/scripts/admanagedsrvctl.sh start oacore_server1 -nopromptmsg",
+        "Timeout specified in context file: -1 second(s) ",
+        "",
+        "script returned:",
+        "****************************************************",
+        "",
+        "You are running admanagedsrvctl.sh version 120.14.12020000.12",
+        "",
+        "Starting oacore_server1...",
+        "",
+        "Server specific logs are located at /cfsdev/r12dev01/fs1/FMW_Home/user_projects/domains/EBS_domain/servers/oacore_server1/logs",
+        "",
+        "admanagedsrvctl.sh: exiting with status 0",
+        "",
+        "admanagedsrvctl.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adoacorectl.txt for more information ...  ",
+        "",
+        "",
+        ".end std out.",
+        "",
+        ".end err out.",
+        "",
+        "****************************************************",
+        "",
+        "",
+        "",
+        "All enabled services for this node are started.",
+        "",
+        "adstrtal.sh: Exiting with status 0",
+        "",
+        "adstrtal.sh: check the logfile /cfsdev/r12dev01/fs1/inst/apps/R12DEV01_orcas1cfsdevap1/logs/appl/admin/log/adstrtal.log for more information ...  "
+    ]
+}
+
+TASK [show parameter ult] **********************************************************************************************************************
+Tuesday 13 June 2023  12:11:02 -0400 (0:00:00.112)       0:12:19.190 **********
+changed: [apr12dev01 -> oracle]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:04 -0400 (0:00:01.342)       0:12:20.532 **********
+ok: [apr12dev01] => {
+    "nm.stdout_lines": [
+        "",
+        "SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 13 12:11:03 2023",
+        "Version 19.17.0.0.0",
+        "",
+        "Copyright (c) 1982, 2022, Oracle.  All rights reserved.",
+        "",
+        "Last Successful login time: Tue Jun 13 2023 12:09:50 -04:00",
+        "",
+        "Connected to:",
+        "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0",
+        "",
+        "SQL> ",
+        "NAME\t  OPEN_MODE",
+        "--------- --------------------",
+        "R12DEVCD  READ WRITE",
+        "",
+        "SQL> ",
+        "Session altered.",
+        "",
+        "SQL> ",
+        "NAME\t\t\t\t     TYPE\t VALUE",
+        "------------------------------------ ----------- ------------------------------",
+        "create_stored_outlines\t\t     string",
+        "utl_file_dir\t\t\t     unknown",
+        "SQL> Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0"
+    ]
+}
+
+TASK [Update OFAC Program] *********************************************************************************************************************
+Tuesday 13 June 2023  12:11:04 -0400 (0:00:00.087)       0:12:20.620 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:04 -0400 (0:00:00.559)       0:12:21.180 **********
+ok: [apr12dev01] => {
+    "k": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (content)",
+                "before": "",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (content)"
+            },
+            {
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (file attributes)",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [else line] *******************************************************************************************************************************
+Tuesday 13 June 2023  12:11:04 -0400 (0:00:00.085)       0:12:21.266 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:05 -0400 (0:00:00.561)       0:12:21.827 **********
+ok: [apr12dev01] => {
+    "a": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (content)",
+                "before": "",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (content)"
+            },
+            {
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (file attributes)",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [echo line] *******************************************************************************************************************************
+Tuesday 13 June 2023  12:11:05 -0400 (0:00:00.086)       0:12:21.914 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:06 -0400 (0:00:00.556)       0:12:22.470 **********
+ok: [apr12dev01] => {
+    "b": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (content)",
+                "before": "",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (content)"
+            },
+            {
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (file attributes)",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [emp file] ********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:06 -0400 (0:00:00.088)       0:12:22.559 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:06 -0400 (0:00:00.550)       0:12:23.110 **********
+ok: [apr12dev01] => {
+    "e": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (content)",
+                "before": "",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (content)"
+            },
+            {
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (file attributes)",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_ofac_sql.prog (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [GL Interface] ****************************************************************************************************************************
+Tuesday 13 June 2023  12:11:06 -0400 (0:00:00.085)       0:12:23.196 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:07 -0400 (0:00:00.553)       0:12:23.749 **********
+ok: [apr12dev01] => {
+    "ha": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_gl_intf_main.prog (content)",
+                "before": "",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_gl_intf_main.prog (content)"
+            },
+            {
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_gl_intf_main.prog (file attributes)",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/arc_gl_intf_main.prog (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [Cathedral commenting] ********************************************************************************************************************
+Tuesday 13 June 2023  12:11:07 -0400 (0:00:00.086)       0:12:23.835 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:08 -0400 (0:00:00.645)       0:12:24.481 **********
+ok: [apr12dev01] => {
+    "p": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/cathedral.sh (content)",
+                "before": "",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/cathedral.sh (content)"
+            },
+            {
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/cathedral.sh (file attributes)",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/cathedral.sh (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [Cathedral uncommenting] ******************************************************************************************************************
+Tuesday 13 June 2023  12:11:08 -0400 (0:00:00.086)       0:12:24.567 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:08 -0400 (0:00:00.540)       0:12:25.108 **********
+ok: [apr12dev01] => {
+    "q": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/cathedral.sh (content)",
+                "before": "",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/cathedral.sh (content)"
+            },
+            {
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/cathedral.sh (file attributes)",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/cathedral.sh (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [Remove line from file] *******************************************************************************************************************
+Tuesday 13 June 2023  12:11:08 -0400 (0:00:00.092)       0:12:25.200 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:09 -0400 (0:00:00.709)       0:12:25.909 **********
+ok: [apr12dev01] => {
+    "remove": {
+        "changed": true,
+        "failed": false,
+        "msg": "1 replacements made"
+    }
+}
+
+TASK [mailx] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:09 -0400 (0:00:00.088)       0:12:25.998 **********
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:10 -0400 (0:00:00.548)       0:12:26.546 **********
+ok: [apr12dev01] => {
+    "e": {
+        "backup": "",
+        "changed": true,
+        "diff": [
+            {
+                "after": "",
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/rrlarc1 (content)",
+                "before": "",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/rrlarc1 (content)"
+            },
+            {
+                "after_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/rrlarc1 (file attributes)",
+                "before_header": "//cfsdev/r12dev01/fs1/EBSapps/appl/cust_R12DEV01/1.0/bin/rrlarc1 (file attributes)"
+            }
+        ],
+        "failed": false,
+        "msg": "line replaced"
+    }
+}
+
+TASK [Enable/Disable Users] ********************************************************************************************************************
+Tuesday 13 June 2023  12:11:10 -0400 (0:00:00.099)       0:12:26.645 **********
+changed: [apr12dev01 -> oracle]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:11:12 -0400 (0:00:02.344)       0:12:28.990 **********
+ok: [apr12dev01] => {
+    "name.stdout_lines": [
+        "",
+        "SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 13 12:11:10 2023",
+        "Version 19.17.0.0.0",
+        "",
+        "Copyright (c) 1982, 2022, Oracle.  All rights reserved.",
+        "",
+        "Last Successful login time: Tue Jun 13 2023 12:11:04 -04:00",
+        "",
+        "Connected to:",
+        "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0",
+        "",
+        "SQL> ",
+        "NAME\t  OPEN_MODE",
+        "--------- --------------------",
+        "R12DEVCD  READ WRITE",
+        "",
+        "SQL> ",
+        "Session altered.",
+        "",
+        "SQL> ",
+        "Table created.",
+        "",
+        "SQL> ",
+        "257 rows updated.",
+        "",
+        "SQL> ",
+        "Commit complete.",
+        "",
+        "SQL> Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0"
+    ]
+}
+
+TASK [Disable Supplier Email Address] **********************************************************************************************************
+Tuesday 13 June 2023  12:11:12 -0400 (0:00:00.101)       0:12:29.091 **********
+changed: [apr12dev01 -> oracle]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:12:13 -0400 (0:01:01.239)       0:13:30.331 **********
+ok: [apr12dev01] => {
+    "name.stdout_lines": [
+        "",
+        "SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 13 12:11:13 2023",
+        "Version 19.17.0.0.0",
+        "",
+        "Copyright (c) 1982, 2022, Oracle.  All rights reserved.",
+        "",
+        "Last Successful login time: Tue Jun 13 2023 12:11:11 -04:00",
+        "",
+        "Connected to:",
+        "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0",
+        "",
+        "SQL> ",
+        "NAME\t  OPEN_MODE",
+        "--------- --------------------",
+        "R12DEVCD  READ WRITE",
+        "",
+        "SQL> ",
+        "Session altered.",
+        "",
+        "SQL> ",
+        "471548 rows updated.",
+        "",
+        "SQL> ",
+        "50074 rows updated.",
+        "",
+        "SQL> ",
+        "1222935 rows updated.",
+        "",
+        "SQL> ",
+        "843037 rows updated.",
+        "",
+        "SQL> ",
+        "Commit complete.",
+        "",
+        "SQL> Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0"
+    ]
+}
+
+TASK [Reset email values to null for customers] ************************************************************************************************
+Tuesday 13 June 2023  12:12:14 -0400 (0:00:00.100)       0:13:30.431 **********
+changed: [apr12dev01 -> oracle]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:12:23 -0400 (0:00:08.967)       0:13:39.398 **********
+ok: [apr12dev01] => {
+    "ne3.stdout_lines": [
+        "",
+        "SQL*Plus: Release 19.0.0.0.0 - Production on Tue Jun 13 12:12:14 2023",
+        "Version 19.17.0.0.0",
+        "",
+        "Copyright (c) 1982, 2022, Oracle.  All rights reserved.",
+        "",
+        "Last Successful login time: Tue Jun 13 2023 12:11:50 -04:00",
+        "",
+        "Connected to:",
+        "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0",
+        "",
+        "SQL> ",
+        "NAME\t  OPEN_MODE",
+        "--------- --------------------",
+        "R12DEVCD  READ WRITE",
+        "",
+        "SQL> ",
+        "Session altered.",
+        "",
+        "SQL> ",
+        "172358 rows updated.",
+        "",
+        "SQL> ",
+        "129978 rows updated.",
+        "",
+        "SQL> ",
+        "44061 rows updated.",
+        "",
+        "SQL> ",
+        "Commit complete.",
+        "",
+        "SQL> Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production",
+        "Version 19.17.0.0.0"
+    ]
+}
+
+TASK [Set directory permission to 775] *********************************************************************************************************
+Tuesday 13 June 2023  12:12:23 -0400 (0:00:00.086)       0:13:39.485 **********
+changed: [apr12dev01] => (item=/cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/inbound)
+changed: [apr12dev01] => (item=/cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/outbound)
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:12:24 -0400 (0:00:01.272)       0:13:40.757 **********
+ok: [apr12dev01] => {
+    "r9": {
+        "changed": true,
+        "msg": "All items completed",
+        "results": [
+            {
+                "ansible_loop_var": "item",
+                "changed": true,
+                "cmd": [
+                    "chmod",
+                    "775",
+                    "/cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/inbound"
+                ],
+                "delta": "0:00:00.045696",
+                "end": "2023-06-13 12:12:23.739058",
+                "failed": false,
+                "invocation": {
+                    "module_args": {
+                        "_raw_params": "chmod 775 /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/inbound",
+                        "_uses_shell": false,
+                        "argv": null,
+                        "chdir": null,
+                        "creates": null,
+                        "executable": null,
+                        "removes": null,
+                        "stdin": null,
+                        "stdin_add_newline": true,
+                        "strip_empty_ends": true,
+                        "warn": false
+                    }
+                },
+                "item": "/cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/inbound",
+                "msg": "",
+                "rc": 0,
+                "start": "2023-06-13 12:12:23.693362",
+                "stderr": "",
+                "stderr_lines": [],
+                "stdout": "",
+                "stdout_lines": []
+            },
+            {
+                "ansible_loop_var": "item",
+                "changed": true,
+                "cmd": [
+                    "chmod",
+                    "775",
+                    "/cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/outbound"
+                ],
+                "delta": "0:00:00.044858",
+                "end": "2023-06-13 12:12:24.265159",
+                "failed": false,
+                "invocation": {
+                    "module_args": {
+                        "_raw_params": "chmod 775 /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/outbound",
+                        "_uses_shell": false,
+                        "argv": null,
+                        "chdir": null,
+                        "creates": null,
+                        "executable": null,
+                        "removes": null,
+                        "stdin": null,
+                        "stdin_add_newline": true,
+                        "strip_empty_ends": true,
+                        "warn": false
+                    }
+                },
+                "item": "/cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/outbound",
+                "msg": "",
+                "rc": 0,
+                "start": "2023-06-13 12:12:24.220301",
+                "stderr": "",
+                "stderr_lines": [],
+                "stdout": "",
+                "stdout_lines": []
+            }
+        ],
+        "skipped": false
+    }
+}
+
+TASK [Set permissions on files and directories] ************************************************************************************************
+Tuesday 13 June 2023  12:12:24 -0400 (0:00:00.091)       0:13:40.849 **********
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=894881194884.29108 started=1 finished=0
+changed: [apr12dev01]
+
+TASK [debug] *******************************************************************                                                                ****************************************************************
+Tuesday 13 June 2023  12:22:32 -0400 (0:10:07.545)       0:23:48.394 **********
+ok: [apr12dev01] => {
+    "r10": {
+        "ansible_job_id": "894881194884.29108",
+        "changed": true,
+        "cmd": "cd /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/inbo                                                                und\nfind . -exec chmod g+s,o-w {} \\;\n",
+        "delta": "0:09:20.173488",
+        "end": "2023-06-13 12:21:45.435461",
+        "failed": false,
+        "finished": 1,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 12:12:25.261973",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [Set permissions on files and directories] ********************************                                                                ****************************************************************
+Tuesday 13 June 2023  12:22:32 -0400 (0:00:00.088)       0:23:48.483 **********
+ASYNC POLL on apr12dev01: jid=955504276793.18572 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=955504276793.18572 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=955504276793.18572 started=1 finished=0
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:26:35 -0400 (0:04:03.472)       0:27:51.956 **********
+ok: [apr12dev01] => {
+    "r11": {
+        "ansible_job_id": "955504276793.18572",
+        "changed": true,
+        "cmd": "cd /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/outbound\nfind . -exec chmod g+s,o-w {} \\;\n",
+        "delta": "0:03:50.717413",
+        "end": "2023-06-13 12:26:23.455904",
+        "failed": false,
+        "finished": 1,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 12:22:32.738491",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+TASK [Set permissions on files and directories] ************************************************************************************************
+Tuesday 13 June 2023  12:26:35 -0400 (0:00:00.087)       0:27:52.043 **********
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+ASYNC POLL on apr12dev01: jid=828031518169.703 started=1 finished=0
+changed: [apr12dev01]
+
+TASK [debug] ***********************************************************************************************************************************
+Tuesday 13 June 2023  12:30:20 -0400 (0:03:45.322)       0:31:37.366 **********
+ok: [apr12dev01] => {
+    "r12": {
+        "ansible_job_id": "828031518169.703",
+        "changed": true,
+        "cmd": "cd /cfsdev/r12dev01/fs_ne/interfaces/cust_R12DEV01/1.0//dat/inbound/ep_shipment_archive\nfind . -type f -exec /usr/bin/rm {} \\;\n",
+        "delta": "0:03:27.525145",
+        "end": "2023-06-13 12:30:03.811522",
+        "failed": false,
+        "finished": 1,
+        "msg": "",
+        "rc": 0,
+        "start": "2023-06-13 12:26:36.286377",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "",
+        "stdout_lines": []
+    }
+}
+
+PLAY RECAP *************************************************************************************************************************************
+apr12dev01                 : ok=78   changed=37   unreachable=0    failed=0    skipped=0    rescued=0    ignored=1
+
+Playbook run took 0 days, 0 hours, 31 minutes, 37 seconds
+Tuesday 13 June 2023  12:30:21 -0400 (0:00:00.111)       0:31:37.477 **********
+===============================================================================
+Set permissions on files and directories ---------------------------------------------------------------------------------------------- 607.55s
+Sanity check -------------------------------------------------------------------------------------------------------------------------- 286.81s
+Set permissions on files and directories ---------------------------------------------------------------------------------------------- 243.47s
+Set permissions on files and directories ---------------------------------------------------------------------------------------------- 225.32s
+adautocfg ----------------------------------------------------------------------------------------------------------------------------- 217.68s
+adadminsrvctl ------------------------------------------------------------------------------------------------------------------------- 113.45s
+Disable Supplier Email Address --------------------------------------------------------------------------------------------------------- 61.24s
+Stop all services ---------------------------------------------------------------------------------------------------------------------- 34.83s
+Update WebLogic Datasource Password ---------------------------------------------------------------------------------------------------- 31.19s
+Stop all services ---------------------------------------------------------------------------------------------------------------------- 22.94s
+Reset email values to null for customers ------------------------------------------------------------------------------------------------ 8.97s
+Wait for tar command to complete -------------------------------------------------------------------------------------------------------- 4.38s
+Change APPSLSYS password in the database ------------------------------------------------------------------------------------------------ 4.06s
+Change ALLORACLE password in the database ----------------------------------------------------------------------------------------------- 2.72s
+Gathering Facts ------------------------------------------------------------------------------------------------------------------------- 2.40s
+Enable/Disable Users -------------------------------------------------------------------------------------------------------------------- 2.34s
+Take a backup of fnd_secure ------------------------------------------------------------------------------------------------------------- 1.57s
+show parameter ult ---------------------------------------------------------------------------------------------------------------------- 1.34s
+Set directory permission to 775 --------------------------------------------------------------------------------------------------------- 1.27s
+Changing the file name ------------------------------------------------------------------------------------------------------------------ 0.73s
+(test) [apr12dev01@orcas1cfsdevap1 automation]$
